@@ -25,4 +25,3 @@ type ProjectPricing struct {
 	Budget    float32 `json:budget`
 	Currency  string  `json:currency`
 }
-
