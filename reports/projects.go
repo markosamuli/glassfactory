@@ -1,4 +1,4 @@
-package api
+package reports
 
 import (
 	"cloud.google.com/go/civil"
@@ -12,7 +12,7 @@ type ProjectMemberTimeReport struct {
 	Project *models.Project
 	Start civil.Date
 	End civil.Date
-	Reports []*MemberTimeReport
+	Reports []*models.MemberTimeReport
 }
 
 func NewProjectMemberTimeReport(userID int, client *models.Client, project *models.Project) *ProjectMemberTimeReport {
@@ -20,11 +20,11 @@ func NewProjectMemberTimeReport(userID int, client *models.Client, project *mode
 		UserID: userID,
 		Client: client,
 		Project: project,
-		Reports: make([]*MemberTimeReport, 0),
+		Reports: make([]*models.MemberTimeReport, 0),
 	}
 }
 
-func (tr *ProjectMemberTimeReport) Append(r *MemberTimeReport) {
+func (tr *ProjectMemberTimeReport) Append(r *models.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
 	}
@@ -50,7 +50,7 @@ func (tr *ProjectMemberTimeReport) Actual() float32 {
 	return actual
 }
 
-func ProjectMemberTimeReports(reports []*MemberTimeReport) []*ProjectMemberTimeReport {
+func ProjectMemberTimeReports(reports []*models.MemberTimeReport) []*ProjectMemberTimeReport {
 	projects := make(map[int]*ProjectMemberTimeReport, 0)
 	for _, r := range reports {
 		pr, ok := projects[r.Project.ID]
