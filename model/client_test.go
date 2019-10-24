@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
+
+	"gotest.tools/assert"
 )
 
 func TestClient(t *testing.T) {
@@ -17,27 +19,14 @@ func TestClient(t *testing.T) {
 	}`
 	var target Client
 	err := json.Unmarshal([]byte(jsonString), &target)
-	if err != nil {
-		t.Errorf("Failed to decode JSON, got error %v", err)
-	}
-	if target.ID != 1234 {
-		t.Errorf("ID = %d; want 1234", target.ID)
-	}
-	if target.Name != "Google" {
-		t.Errorf("Name = %s; want Google", target.Name)
-	}
-	if !target.ArchivedAt.IsZero() {
-		t.Errorf("ArchivedAt = %s; want zero date", target.ArchivedAt)
-	}
-	if target.IsArchived() {
-		t.Errorf("IsArchived() returned true; want false")
-	}
-	if target.OwnerID != 567 {
-		t.Errorf("OwnerID = %d; want 567", target.OwnerID)
-	}
-	if target.OfficeID != 789 {
-		t.Errorf("OfficeID = %d; want 789", target.OfficeID)
-	}
+	assert.NilError(t, err)
+
+	assert.Equal(t, target.ID, 1234)
+	assert.Equal(t, target.Name, "Google")
+	assert.Assert(t, target.ArchivedAt.IsZero())
+	assert.Assert(t, !target.IsArchived())
+	assert.Equal(t, target.OwnerID, 567)
+	assert.Equal(t, target.OfficeID, 789)
 }
 
 func TestClientArchived(t *testing.T) {
@@ -51,14 +40,9 @@ func TestClientArchived(t *testing.T) {
 	}`
 	var target Client
 	err := json.Unmarshal([]byte(jsonString), &target)
-	if err != nil {
-		t.Errorf("Failed to decode JSON, got error %v", err)
-	}
+	assert.NilError(t, err)
+
 	archivedAt := time.Date(2018, time.Month(6), 7, 7, 27, 54, 563 * 1000000, time.UTC)
-	if target.ArchivedAt != archivedAt {
-		t.Errorf("ArchivedAt = %s; want %s", target.ArchivedAt, archivedAt)
-	}
-	if !target.IsArchived() {
-		t.Errorf("IsArchived() returned false; want true")
-	}
+	assert.Equal(t, target.ArchivedAt, archivedAt)
+	assert.Assert(t, target.IsArchived())
 }
