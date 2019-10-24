@@ -3,27 +3,27 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/model"
 	"net/http"
 	"net/url"
 )
 
 func NewMembersService(s *Service) *MembersService {
 	rs := &MembersService{s: s}
-	rs.members = make(map[int]*models.Member)
+	rs.members = make(map[int]*model.Member)
 	return rs
 }
 
 type MembersService struct {
 	s *Service
-	members map[int]*models.Member
+	members map[int]*model.Member
 }
 
-func (r *MembersService) GetCurrentMember() (*models.Member, error) {
+func (r *MembersService) GetCurrentMember() (*model.Member, error) {
 	return r.FindByEmail(r.s.settings.UserEmail)
 }
 
-func (r *MembersService) GetActive() ([]*models.Member, error) {
+func (r *MembersService) GetActive() ([]*model.Member, error) {
 	res, err := r.ListActive().Do()
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (r *MembersService) GetActive() ([]*models.Member, error) {
 	return res.Members, nil
 }
 
-func (r *MembersService) Get(userID int) (*models.Member, error) {
+func (r *MembersService) Get(userID int) (*model.Member, error) {
 	client, ok := r.members[userID]
 	if ok {
 		return client, nil
@@ -53,7 +53,7 @@ func (r *MembersService) Details(userID int) *MemberDetailsCall {
 	return c
 }
 
-func (r *MembersService) FindByEmail(email string) (*models.Member, error) {
+func (r *MembersService) FindByEmail(email string) (*model.Member, error) {
 	for _, m := range r.members {
 		if m.Email == email {
 			return m, nil
@@ -78,7 +78,7 @@ func (r *MembersService) FindByEmail(email string) (*models.Member, error) {
 func (r *MembersService) SearchActive(term string) *MembersListCall {
 	c := &MembersListCall{s: r.s}
 	c.term = term
-	c.status = models.MemberStatusActive
+	c.status = model.MemberStatusActive
 	return c
 }
 
@@ -89,13 +89,13 @@ func (r *MembersService) List() *MembersListCall {
 
 func (r *MembersService) ListActive() *MembersListCall {
 	c := &MembersListCall{s: r.s}
-	c.status = models.MemberStatusActive
+	c.status = model.MemberStatusActive
 	return c
 }
 
 func (r *MembersService) ListArchived() *MembersListCall {
 	c := &MembersListCall{s: r.s}
-	c.status = models.MemberStatusArchived
+	c.status = model.MemberStatusArchived
 	return c
 }
 
@@ -105,7 +105,7 @@ type MemberDetailsCall struct {
 }
 
 type MemberDetailsResponse struct {
-	Member *models.Member
+	Member *model.Member
 }
 
 func (c *MemberDetailsCall) doRequest() (*http.Response, error) {
@@ -135,7 +135,7 @@ func (c *MemberDetailsCall) Do() (*MemberDetailsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	var target models.Member
+	var target model.Member
 	if err := DecodeResponse(&target, res); err != nil {
 		return nil, err
 	}
@@ -151,16 +151,16 @@ type MembersListCall struct {
 }
 
 type MembersListResponse struct {
-	Members []*models.Member
+	Members []*model.Member
 	Status string
 }
 
 func (c *MembersListCall) doRequest() (*http.Response, error) {
 	var urls string
 	switch c.status {
-	case models.MemberStatusActive:
+	case model.MemberStatusActive:
 		urls = c.s.BasePath + "members/active.json"
-	case models.MemberStatusArchived:
+	case model.MemberStatusArchived:
 		urls = c.s.BasePath + "members/archived.json"
 	default:
 		urls = c.s.BasePath + "members.json"
@@ -191,7 +191,7 @@ func (c *MembersListCall) Do() (*MembersListResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	target := make([]*models.Member, 0)
+	target := make([]*model.Member, 0)
 	if err := DecodeResponse(&target, res); err != nil {
 		return nil, err
 	}

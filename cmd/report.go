@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutils"
+	"github.com/markosamuli/glassfactory/dateutil"
 	"os"
 	"time"
 
@@ -73,7 +73,7 @@ var fiscalYearReportCmd = &cobra.Command{
 		}
 
 		fiscalYearFinalMonth := time.January
-		fiscalYear := dateutils.NewFiscalYear(time.Now().AddDate(-3, 0, 0), fiscalYearFinalMonth)
+		fiscalYear := dateutil.NewFiscalYear(time.Now().AddDate(-3, 0, 0), fiscalYearFinalMonth)
 		annualReports, err := s.Reports.FiscalYearMemberTimeReports(member.ID, fiscalYear)
 		if err != nil {
 			fmt.Println("Error:", err)

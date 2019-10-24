@@ -3,12 +3,12 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/markosamuli/glassfactory/api"
-	"github.com/markosamuli/glassfactory/settings"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"os"
 )
 
 const cfgName = ".glassfactory"
@@ -28,7 +28,7 @@ var ( // Used for flags.
 
 func createService() (*api.Service, error) {
 	ctx := context.Background()
-	gfs := settings.GlassFactorySettings{}
+	gfs := api.GlassFactorySettings{}
 	gfs.AccountSubdomain = viper.GetString("account_subdomain")
 	gfs.UserEmail = viper.GetString("user_email")
 	gfs.UserToken = viper.GetString("user_token")

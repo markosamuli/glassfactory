@@ -4,14 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/markosamuli/glassfactory/settings"
-	"github.com/markosamuli/glassfactory/transport"
 	"net/http"
 )
 
 // NewService creates a new Service.
-func NewService(ctx context.Context, gfs *settings.GlassFactorySettings) (*Service, error) {
-	client, endpoint, err := transport.NewClient(ctx, gfs)
+func NewService(ctx context.Context, gfs *GlassFactorySettings) (*Service, error) {
+	client, endpoint, err := NewClient(ctx, gfs)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +38,7 @@ func New(client *http.Client) (*Service, error) {
 
 type Service struct {
 	client *http.Client
-	settings *settings.GlassFactorySettings
+	settings *GlassFactorySettings
 	BasePath string // Base URL for the API
 
 	Clients *ClientsService

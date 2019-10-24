@@ -1,10 +1,10 @@
-package reports
+package reporting
 
 import (
 	"cloud.google.com/go/civil"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutils"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/dateutil"
+	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
@@ -13,21 +13,21 @@ import (
 
 type MonthlyMemberTimeReport struct {
 	UserID        int
-	CalendarMonth dateutils.CalendarMonth
+	CalendarMonth dateutil.CalendarMonth
 	Start         civil.Date
 	End           civil.Date
-	Reports       []*models.MemberTimeReport
+	Reports       []*model.MemberTimeReport
 }
 
-func NewMonthlyMemberTimeReport(userID int, month dateutils.CalendarMonth) *MonthlyMemberTimeReport {
+func NewMonthlyMemberTimeReport(userID int, month dateutil.CalendarMonth) *MonthlyMemberTimeReport {
 	return &MonthlyMemberTimeReport{
 		UserID:        userID,
 		CalendarMonth: month,
-		Reports:       make([]*models.MemberTimeReport, 0),
+		Reports:       make([]*model.MemberTimeReport, 0),
 	}
 }
 
-func (tr *MonthlyMemberTimeReport) Append(r *models.MemberTimeReport) {
+func (tr *MonthlyMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
 	}
@@ -53,8 +53,8 @@ func (tr *MonthlyMemberTimeReport) Actual() float32 {
 	return actual
 }
 
-func MonthlyMemberTimeReports(reports []*models.MemberTimeReport) []*MonthlyMemberTimeReport {
-	months := make(map[dateutils.CalendarMonth]*MonthlyMemberTimeReport, 0)
+func MonthlyMemberTimeReports(reports []*model.MemberTimeReport) []*MonthlyMemberTimeReport {
+	months := make(map[dateutil.CalendarMonth]*MonthlyMemberTimeReport, 0)
 	for _, r := range reports {
 		month := r.CalendarMonth()
 		mr, ok := months[month]
@@ -81,11 +81,11 @@ func (a ByCalendarMonth) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 
 type MonthlyTimeReport struct {
-	CalendarMonth dateutils.CalendarMonth
-	Client *models.Client
-	Project *models.Project
-	Planned float32
-	Actual float32
+	CalendarMonth dateutil.CalendarMonth
+	Client        *model.Client
+	Project       *model.Project
+	Planned       float32
+	Actual        float32
 }
 
 func (r *MonthlyTimeReport) BillableStatus() string {

@@ -1,10 +1,10 @@
-package reports
+package reporting
 
 import (
 	"cloud.google.com/go/civil"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutils"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/dateutil"
+	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
@@ -12,10 +12,10 @@ import (
 	"time"
 )
 
-func FiscalYearMemberTimeReports(reports []*models.MemberTimeReport, finalMonth time.Month) []*FiscalYearMemberTimeReport {
-	periods := make(map[dateutils.FiscalYear]*FiscalYearMemberTimeReport, 0)
+func FiscalYearMemberTimeReports(reports []*model.MemberTimeReport, finalMonth time.Month) []*FiscalYearMemberTimeReport {
+	periods := make(map[dateutil.FiscalYear]*FiscalYearMemberTimeReport, 0)
 	for _, r := range reports {
-		fy := *dateutils.NewFiscalYear(r.Date.In(time.Local), finalMonth)
+		fy := *dateutil.NewFiscalYear(r.Date.In(time.Local), finalMonth)
 		p, ok := periods[fy]
 		if !ok {
 			p = NewFiscalYearMemberTimeReport(r.UserID, fy)
@@ -40,17 +40,17 @@ func (a ByFiscalYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 type FiscalYearMemberTimeReport struct {
 	UserID     int
-	FiscalYear dateutils.FiscalYear
+	FiscalYear dateutil.FiscalYear
 	Start      civil.Date
 	End        civil.Date
-	Reports    []*models.MemberTimeReport
+	Reports    []*model.MemberTimeReport
 }
 
-func NewFiscalYearMemberTimeReport(userID int, fy dateutils.FiscalYear) *FiscalYearMemberTimeReport {
+func NewFiscalYearMemberTimeReport(userID int, fy dateutil.FiscalYear) *FiscalYearMemberTimeReport {
 	return &FiscalYearMemberTimeReport{
 		UserID:     userID,
 		FiscalYear: fy,
-		Reports:    make([]*models.MemberTimeReport, 0),
+		Reports:    make([]*model.MemberTimeReport, 0),
 	}
 }
 
@@ -96,7 +96,7 @@ func (tr *FiscalYearMemberTimeReport) RenderTable(writer io.Writer) {
 	table.Render()
 }
 
-func (tr *FiscalYearMemberTimeReport) Append(r *models.MemberTimeReport) {
+func (tr *FiscalYearMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
 	}
@@ -123,11 +123,11 @@ func (tr *FiscalYearMemberTimeReport) Actual() float32 {
 }
 
 type FiscalYearTimeReport struct {
-	FiscalYear dateutils.FiscalYear
-	Client *models.Client
-	Project *models.Project
-	Planned float32
-	Actual float32
+	FiscalYear dateutil.FiscalYear
+	Client     *model.Client
+	Project    *model.Project
+	Planned    float32
+	Actual     float32
 }
 
 func (r *FiscalYearTimeReport) BillableStatus() string {

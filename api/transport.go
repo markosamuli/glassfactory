@@ -1,10 +1,9 @@
-package transport
+package api
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/markosamuli/glassfactory/settings"
 	"net/http"
 )
 
@@ -25,7 +24,7 @@ func (trans GlassFactoryAuthTransport) RoundTrip(req *http.Request) (*http.Respo
 	return http.DefaultTransport.RoundTrip(req)
 }
 
-func NewClient(ctx context.Context, gfs *settings.GlassFactorySettings) (*http.Client, string, error) {
+func NewClient(ctx context.Context, gfs *GlassFactorySettings) (*http.Client, string, error) {
 	if gfs.UserEmail == "" || gfs.UserToken == "" {
 		return nil, "", errors.New("user email or API key missing")
 	}

@@ -1,8 +1,8 @@
-package models
+package model
 
 import (
 	"cloud.google.com/go/civil"
-	"github.com/markosamuli/glassfactory/dateutils"
+	"github.com/markosamuli/glassfactory/dateutil"
 )
 
 type MemberTimeReport struct {
@@ -19,8 +19,8 @@ type MemberTimeReport struct {
 	Project    *Project
 }
 
-func (r *MemberTimeReport) CalendarMonth() dateutils.CalendarMonth {
-	return dateutils.CalendarMonth{
+func (r *MemberTimeReport) CalendarMonth() dateutil.CalendarMonth {
+	return dateutil.CalendarMonth{
 		Year:  r.Date.Year,
 		Month: r.Date.Month,
 	}

@@ -1,30 +1,30 @@
-package reports
+package reporting
 
 import (
 	"cloud.google.com/go/civil"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/model"
 	"sort"
 )
 
 type ProjectMemberTimeReport struct {
 	UserID int
-	Client *models.Client
-	Project *models.Project
+	Client *model.Client
+	Project *model.Project
 	Start civil.Date
 	End civil.Date
-	Reports []*models.MemberTimeReport
+	Reports []*model.MemberTimeReport
 }
 
-func NewProjectMemberTimeReport(userID int, client *models.Client, project *models.Project) *ProjectMemberTimeReport {
+func NewProjectMemberTimeReport(userID int, client *model.Client, project *model.Project) *ProjectMemberTimeReport {
 	return &ProjectMemberTimeReport{
 		UserID: userID,
 		Client: client,
 		Project: project,
-		Reports: make([]*models.MemberTimeReport, 0),
+		Reports: make([]*model.MemberTimeReport, 0),
 	}
 }
 
-func (tr *ProjectMemberTimeReport) Append(r *models.MemberTimeReport) {
+func (tr *ProjectMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
 	}
@@ -50,7 +50,7 @@ func (tr *ProjectMemberTimeReport) Actual() float32 {
 	return actual
 }
 
-func ProjectMemberTimeReports(reports []*models.MemberTimeReport) []*ProjectMemberTimeReport {
+func ProjectMemberTimeReports(reports []*model.MemberTimeReport) []*ProjectMemberTimeReport {
 	projects := make(map[int]*ProjectMemberTimeReport, 0)
 	for _, r := range reports {
 		pr, ok := projects[r.Project.ID]

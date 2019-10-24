@@ -1,8 +1,8 @@
-package reports
+package reporting
 
 import (
 	"fmt"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
@@ -12,8 +12,8 @@ import (
 
 type AnnualTimeReport struct {
 	Year int
-	Client *models.Client
-	Project *models.Project
+	Client *model.Client
+	Project *model.Project
 	Planned float32
 	Actual float32
 }

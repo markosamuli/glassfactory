@@ -3,22 +3,22 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/markosamuli/glassfactory/models"
+	"github.com/markosamuli/glassfactory/model"
 	"net/http"
 )
 
 func NewClientsService(s *Service) *ClientsService {
 	rs := &ClientsService{s: s}
-	rs.clients = make(map[int]*models.Client)
+	rs.clients = make(map[int]*model.Client)
 	return rs
 }
 
 type ClientsService struct {
 	s *Service
-	clients map[int]*models.Client
+	clients map[int]*model.Client
 }
 
-func (r *ClientsService) Get(clientID int) (*models.Client, error) {
+func (r *ClientsService) Get(clientID int) (*model.Client, error) {
 	client, ok := r.clients[clientID]
 	if ok {
 		return client, nil
@@ -43,7 +43,7 @@ type ClientDetailsCall struct {
 }
 
 type ClientDetailsResponse struct {
-	Client *models.Client
+	Client *model.Client
 }
 
 func (c *ClientDetailsCall) doRequest() (*http.Response, error) {
@@ -73,7 +73,7 @@ func (c *ClientDetailsCall) Do() (*ClientDetailsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	var target models.Client
+	var target model.Client
 	if err := DecodeResponse(&target, res); err != nil {
 		return nil, err
 	}

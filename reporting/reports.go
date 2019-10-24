@@ -1,4 +1,4 @@
-package reports
+package reporting
 
 type TimeReportTotals struct {
 	actual float32

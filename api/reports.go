@@ -4,9 +4,9 @@ import (
 	"cloud.google.com/go/civil"
 	"errors"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutils"
-	"github.com/markosamuli/glassfactory/models"
-	"github.com/markosamuli/glassfactory/reports"
+	"github.com/markosamuli/glassfactory/dateutil"
+	"github.com/markosamuli/glassfactory/model"
+	"github.com/markosamuli/glassfactory/reporting"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -26,12 +26,12 @@ type ReportsService struct {
 }
 
 // MonthlyMemberTimeReports queries Glass Factory and returns time reports for a full calendar year matching the given time
-func (r *ReportsService) MonthlyMemberTimeReports(userID int, t time.Time) ([]*reports.MonthlyMemberTimeReport, error) {
+func (r *ReportsService) MonthlyMemberTimeReports(userID int, t time.Time) ([]*reporting.MonthlyMemberTimeReport, error) {
 	responses, err := r.MemberTimeReportsForYear(userID, t).Do()
 	if err != nil {
 		return nil, err
 	}
-	mtr := make([]*models.MemberTimeReport, 0)
+	mtr := make([]*model.MemberTimeReport, 0)
 	for _, response := range responses {
 		for _, report := range response.Reports {
 			client, err := r.s.Clients.Get(report.ClientID)
@@ -47,16 +47,16 @@ func (r *ReportsService) MonthlyMemberTimeReports(userID int, t time.Time) ([]*r
 			mtr = append(mtr, report)
 		}
 	}
-	return reports.MonthlyMemberTimeReports(mtr), nil
+	return reporting.MonthlyMemberTimeReports(mtr), nil
 }
 
 // MonthlyMemberTimeReports queries Glass Factory and returns time reports for the given fiscal year
-func (r *ReportsService) FiscalYearMemberTimeReports(userID int, fiscalYear *dateutils.FiscalYear) ([]*reports.FiscalYearMemberTimeReport, error) {
+func (r *ReportsService) FiscalYearMemberTimeReports(userID int, fiscalYear *dateutil.FiscalYear) ([]*reporting.FiscalYearMemberTimeReport, error) {
 	responses, err := r.MemberTimeReportsForFiscalYear(userID, fiscalYear).Do()
 	if err != nil {
 		return nil, err
 	}
-	mtr := make([]*models.MemberTimeReport, 0)
+	mtr := make([]*model.MemberTimeReport, 0)
 	for _, response := range responses {
 		for _, report := range response.Reports {
 			client, err := r.s.Clients.Get(report.ClientID)
@@ -72,7 +72,7 @@ func (r *ReportsService) FiscalYearMemberTimeReports(userID int, fiscalYear *dat
 			mtr = append(mtr, report)
 		}
 	}
-	return reports.FiscalYearMemberTimeReports(mtr, fiscalYear.End.Month()), nil
+	return reporting.FiscalYearMemberTimeReports(mtr, fiscalYear.End.Month()), nil
 }
 
 // MemberTimeReport queries Glass Factory and returns time reports for the given time period
@@ -89,7 +89,7 @@ func (r *ReportsService) MemberTimeReport(userID int, start time.Time, end time.
 }
 
 // MemberTimeReportsForFiscalYear queries Glass Factory and returns time reports for the given fiscal year
-func (r *ReportsService) MemberTimeReportsForFiscalYear(userID int, fiscalYear *dateutils.FiscalYear) *MemberTimeReportCalls {
+func (r *ReportsService) MemberTimeReportsForFiscalYear(userID int, fiscalYear *dateutil.FiscalYear) *MemberTimeReportCalls {
 	now := time.Now()
 	start := fiscalYear.Start
 	end := fiscalYear.End
@@ -98,7 +98,7 @@ func (r *ReportsService) MemberTimeReportsForFiscalYear(userID int, fiscalYear *
 	}
 	calls := &MemberTimeReportCalls{s: r.s}
 	calls.userID = userID
-	for _, m := range dateutils.MonthsBetweenDates(start, end) {
+	for _, m := range dateutil.MonthsBetweenDates(start, end) {
 		c := r.MemberTimeReport(userID, m.Start, m.End)
 		calls.Append(c)
 	}
@@ -108,14 +108,14 @@ func (r *ReportsService) MemberTimeReportsForFiscalYear(userID int, fiscalYear *
 // MemberTimeReportsForYear creates multiple calls for fetching time reports for a full calendar year matching the given date
 func (r *ReportsService) MemberTimeReportsForYear(userID int, t time.Time) *MemberTimeReportCalls {
 	now := time.Now()
-	start := dateutils.BeginningOfYear(t)
-	end := dateutils.EndOfYear(t)
+	start := dateutil.BeginningOfYear(t)
+	end := dateutil.EndOfYear(t)
 	if end.After(now) {
 		end = now
 	}
 	calls := &MemberTimeReportCalls{s: r.s}
 	calls.userID = userID
-	for _, m := range dateutils.MonthsBetweenDates(start, end) {
+	for _, m := range dateutil.MonthsBetweenDates(start, end) {
 		c := r.MemberTimeReport(userID, m.Start, m.End)
 		calls.Append(c)
 	}
@@ -124,8 +124,8 @@ func (r *ReportsService) MemberTimeReportsForYear(userID int, t time.Time) *Memb
 
 // MemberTimeReportForMonth creates a call for fetching time reports for a single month
 func (r *ReportsService) MemberTimeReportForMonth(userID int, t time.Time) *MemberTimeReportCall {
-	start := dateutils.BeginningOfMonth(t)
-	end := dateutils.EndOfMonth(t)
+	start := dateutil.BeginningOfMonth(t)
+	end := dateutil.EndOfMonth(t)
 	return r.MemberTimeReport(userID, start, end)
 }
 
@@ -143,7 +143,7 @@ type MemberTimeReportCall struct {
 
 // MemberTimeReportResponse contains the time reports returned from Glass Factory
 type MemberTimeReportResponse struct {
-	Reports []*models.MemberTimeReport
+	Reports []*model.MemberTimeReport
 }
 
 func (c *MemberTimeReportCall) doRequest() (*http.Response, error) {
@@ -203,7 +203,7 @@ func (c *MemberTimeReportCall) Do() (*MemberTimeReportResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	target := make([]*models.MemberTimeReport, 0)
+	target := make([]*model.MemberTimeReport, 0)
 	if err := DecodeResponse(&target, res); err != nil {
 		return nil, err
 	}

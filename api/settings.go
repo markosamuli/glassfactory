@@ -1,8 +1,8 @@
-package settings
+package api
 
 // GlassFactorySettings for the HTTP client
 type GlassFactorySettings struct {
-	UserEmail string
-	UserToken string
+	UserEmail        string
+	UserToken        string
 	AccountSubdomain string
 }

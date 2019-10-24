@@ -2,19 +2,20 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/markosamuli/glassfactory/settings"
+	"os"
+	"path/filepath"
+
+	"github.com/markosamuli/glassfactory/api"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"os"
-	"path/filepath"
 )
 
 func init() {
 	rootCmd.AddCommand(configCmd)
 }
 
-func getSettingsFromUser() (*settings.GlassFactorySettings, error) {
+func getSettingsFromUser() (*api.GlassFactorySettings, error) {
 
 	fmt.Print("Type your Glass Factory subdomain (eg. 'subdomain' if you login at https://subdomain.glassfactory.io):\n")
 
@@ -37,7 +38,7 @@ func getSettingsFromUser() (*settings.GlassFactorySettings, error) {
 		return nil, fmt.Errorf("unable to read API key %v", err)
 	}
 
-	gfs := &settings.GlassFactorySettings{
+	gfs := &api.GlassFactorySettings{
 		AccountSubdomain: subdomain,
 		UserEmail: email,
 		UserToken: token,
