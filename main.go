@@ -1,3 +1,4 @@
+// CLI application for Glass Factory
 package main
 
 import (

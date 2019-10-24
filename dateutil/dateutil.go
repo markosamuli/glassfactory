@@ -1,3 +1,4 @@
+// Package dateutil provides tools and types for handling date and time information
 package dateutil
 
 import (
