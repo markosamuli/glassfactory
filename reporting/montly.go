@@ -6,7 +6,7 @@ import (
 	"os"
 	"sort"
 
-	"cloud.google.com/go/civil"
+	"github.com/markosamuli/glassfactory/dateutil"
 	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
 )
@@ -14,8 +14,8 @@ import (
 type MonthlyMemberTimeReport struct {
 	UserID        int
 	CalendarMonth CalendarMonth
-	Start         civil.Date
-	End           civil.Date
+	Start         dateutil.Date
+	End           dateutil.Date
 	Reports       []*model.MemberTimeReport
 }
 
@@ -37,16 +37,16 @@ func (tr *MonthlyMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
-func (tr *MonthlyMemberTimeReport) Planned() float32 {
-	var planned float32
+func (tr *MonthlyMemberTimeReport) Planned() float64 {
+	var planned float64
 	for _, r := range tr.Reports {
 		planned += r.Planned
 	}
 	return planned
 }
 
-func (tr *MonthlyMemberTimeReport) Actual() float32 {
-	var actual float32
+func (tr *MonthlyMemberTimeReport) Actual() float64 {
+	var actual float64
 	for _, r := range tr.Reports {
 		actual += r.Actual
 	}
@@ -87,8 +87,8 @@ type MonthlyTimeReport struct {
 	CalendarMonth CalendarMonth
 	Client        *model.Client
 	Project       *model.Project
-	Planned       float32
-	Actual        float32
+	Planned       float64
+	Actual        float64
 }
 
 func (r *MonthlyTimeReport) BillableStatus() string {
@@ -140,8 +140,8 @@ func (t *MonthlyTimeReportTableWriter) Append(r *MonthlyTimeReport) {
 }
 
 func (t *MonthlyTimeReportTableWriter) Render() {
-	var planned float32
-	var actual float32
+	var planned float64
+	var actual float64
 	for billable, totals := range t.totals {
 		totalHeader := fmt.Sprintf("Total %s", billable)
 		t.table.Append([]string{

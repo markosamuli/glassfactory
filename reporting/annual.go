@@ -14,8 +14,8 @@ type AnnualTimeReport struct {
 	Year int
 	Client *model.Client
 	Project *model.Project
-	Planned float32
-	Actual float32
+	Planned float64
+	Actual float64
 }
 
 func (r *AnnualTimeReport) BillableStatus() string {
@@ -67,8 +67,8 @@ func (t *AnnualTimeReportTableWriter) Append(r *AnnualTimeReport) {
 }
 
 func (t *AnnualTimeReportTableWriter) Render() {
-	var planned float32
-	var actual float32
+	var planned float64
+	var actual float64
 	for billable, totals := range t.totals {
 		totalHeader := fmt.Sprintf("Total %s", billable)
 		t.table.Append([]string{

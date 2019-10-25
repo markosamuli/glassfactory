@@ -1,8 +1,8 @@
 package reporting
 
 type TimeReportTotals struct {
-	actual float32
-	planned float32
+	actual float64
+	planned float64
 }
 
 func FormatBillableStatus(billableStatus string) string {

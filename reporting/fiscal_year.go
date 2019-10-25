@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	"cloud.google.com/go/civil"
+	"github.com/markosamuli/glassfactory/dateutil"
 	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
 )
@@ -86,8 +86,8 @@ func (a ByFiscalYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 type FiscalYearMemberTimeReport struct {
 	UserID     int
 	FiscalYear FiscalYear
-	Start      civil.Date
-	End        civil.Date
+	Start      dateutil.Date
+	End        dateutil.Date
 	Reports    []*model.MemberTimeReport
 }
 
@@ -151,16 +151,16 @@ func (tr *FiscalYearMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
-func (tr *FiscalYearMemberTimeReport) Planned() float32 {
-	var planned float32
+func (tr *FiscalYearMemberTimeReport) Planned() float64 {
+	var planned float64
 	for _, r := range tr.Reports {
 		planned += r.Planned
 	}
 	return planned
 }
 
-func (tr *FiscalYearMemberTimeReport) Actual() float32 {
-	var actual float32
+func (tr *FiscalYearMemberTimeReport) Actual() float64 {
+	var actual float64
 	for _, r := range tr.Reports {
 		actual += r.Actual
 	}
@@ -171,8 +171,8 @@ type FiscalYearTimeReport struct {
 	FiscalYear FiscalYear
 	Client     *model.Client
 	Project    *model.Project
-	Planned    float32
-	Actual     float32
+	Planned    float64
+	Actual     float64
 }
 
 func (r *FiscalYearTimeReport) BillableStatus() string {
@@ -224,8 +224,8 @@ func (t *FiscalYearTimeReportTableWriter) Append(r *FiscalYearTimeReport) {
 }
 
 func (t *FiscalYearTimeReportTableWriter) Render() {
-	var planned float32
-	var actual float32
+	var planned float64
+	var actual float64
 	for billable, totals := range t.totals {
 		totalHeader := fmt.Sprintf("Total %s", billable)
 		t.table.Append([]string{

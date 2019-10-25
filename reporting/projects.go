@@ -3,7 +3,7 @@ package reporting
 import (
 	"sort"
 
-	"cloud.google.com/go/civil"
+	"github.com/markosamuli/glassfactory/dateutil"
 	"github.com/markosamuli/glassfactory/model"
 )
 
@@ -11,8 +11,8 @@ type ProjectMemberTimeReport struct {
 	UserID int
 	Client *model.Client
 	Project *model.Project
-	Start civil.Date
-	End civil.Date
+	Start dateutil.Date
+	End dateutil.Date
 	Reports []*model.MemberTimeReport
 }
 
@@ -35,16 +35,16 @@ func (tr *ProjectMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
-func (tr *ProjectMemberTimeReport) Planned() float32 {
-	var planned float32
+func (tr *ProjectMemberTimeReport) Planned() float64 {
+	var planned float64
 	for  _, r := range tr.Reports {
 		planned += r.Planned
 	}
 	return planned
 }
 
-func (tr *ProjectMemberTimeReport) Actual() float32 {
-	var actual float32
+func (tr *ProjectMemberTimeReport) Actual() float64 {
+	var actual float64
 	for  _, r := range tr.Reports {
 		actual += r.Actual
 	}
