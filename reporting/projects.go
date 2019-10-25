@@ -1,9 +1,10 @@
 package reporting
 
 import (
+	"sort"
+
 	"cloud.google.com/go/civil"
 	"github.com/markosamuli/glassfactory/model"
-	"sort"
 )
 
 type ProjectMemberTimeReport struct {

@@ -2,14 +2,14 @@ package reporting
 
 import (
 	"fmt"
-	"github.com/markosamuli/glassfactory/model"
-	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
+
+	"github.com/markosamuli/glassfactory/model"
+	"github.com/olekukonko/tablewriter"
 )
 
-// Annual time reports
-
+// AnnualTimeReport represents a project time report for a calendar year
 type AnnualTimeReport struct {
 	Year int
 	Client *model.Client

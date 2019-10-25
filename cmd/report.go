@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/markosamuli/glassfactory"
 	"github.com/markosamuli/glassfactory-cli/reporting"
+	"github.com/markosamuli/glassfactory/glassfactory"
 	"github.com/spf13/cobra"
 )
 
@@ -47,7 +47,7 @@ var monthlyReportsCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		member, err := s.Members.GetCurrentMember()
+		member, err := s.GetCurrentMember()
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -83,12 +83,11 @@ var fiscalYearReportCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		member, err := s.Members.GetCurrentMember()
+		member, err := s.GetCurrentMember()
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-
 
 		r, err := createReportingService(s)
 		if err != nil {

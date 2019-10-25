@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// CalendarMonth represents a calendar month
 type CalendarMonth struct {
 	Year  int        // Year (e.g., 2014).
 	Month time.Month // Month of the year (January = 1, ...).
@@ -23,7 +24,7 @@ func (m CalendarMonth) After(m2 CalendarMonth) bool {
 	return m2.Before(m)
 }
 
-// String returns the date in RFC3339 full-date format.
+// String returns the month in YYYY-MM format.
 func (m CalendarMonth) String() string {
 	return fmt.Sprintf("%04d-%02d", m.Year, m.Month)
 }

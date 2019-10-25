@@ -12,11 +12,13 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+// FiscalYear represents a time range for a fiscal year
 type FiscalYear struct {
 	Start time.Time
 	End time.Time
 }
 
+// String returns the fiscal year in FY YYYY format.
 func (fy FiscalYear) String() string {
 	return fmt.Sprintf("FY %04d", fy.End.Year())
 }
@@ -31,6 +33,7 @@ func (fy FiscalYear) After(fy2 FiscalYear) bool {
 	return fy2.Before(fy)
 }
 
+// NewFiscalYear returns new FiscalYear for the given date ending at the given month
 func NewFiscalYear(d time.Time, finalMonth time.Month) *FiscalYear {
 	var start time.Time
 	var end time.Time

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/markosamuli/glassfactory"
+	"github.com/markosamuli/glassfactory/glassfactory"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
