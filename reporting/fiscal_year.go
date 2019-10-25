@@ -1,21 +1,63 @@
 package reporting
 
 import (
-	"cloud.google.com/go/civil"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutil"
-	"github.com/markosamuli/glassfactory/model"
-	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
 	"sort"
 	"time"
+
+	"cloud.google.com/go/civil"
+	"github.com/markosamuli/glassfactory/model"
+	"github.com/olekukonko/tablewriter"
 )
 
+type FiscalYear struct {
+	Start time.Time
+	End time.Time
+}
+
+func (fy FiscalYear) String() string {
+	return fmt.Sprintf("FY %04d", fy.End.Year())
+}
+
+// Before reports whether fy occurs before fy2.
+func (fy FiscalYear) Before(fy2 FiscalYear) bool {
+	return fy.End.Before(fy2.End)
+}
+
+// After reports whether fy occurs after fy2.
+func (fy FiscalYear) After(fy2 FiscalYear) bool {
+	return fy2.Before(fy)
+}
+
+func NewFiscalYear(d time.Time, finalMonth time.Month) *FiscalYear {
+	var start time.Time
+	var end time.Time
+	if finalMonth < time.December {
+		start = time.Date(d.Year() - 1, finalMonth + 1, 1, 0, 0, 0, 0, time.Local)
+		end = time.Date(d.Year(), finalMonth, 1, 0, 0, 0, 0, time.Local)
+	} else {
+		start = time.Date(d.Year(), time.January, 1, 0, 0, 0, 0, time.Local)
+		end = time.Date(d.Year(), time.December, 1, 0, 0, 0, 0, time.Local)
+	}
+	if d.Before(start) {
+		start = start.AddDate(-1, 0 ,0)
+		end = end.AddDate(-1,0 ,0)
+	} else if d.After(end) {
+		start = start.AddDate(1, 0 ,0)
+		end = end.AddDate(1, 0 ,0)
+	}
+	return &FiscalYear{
+		Start: start,
+		End: end,
+	}
+}
+
 func FiscalYearMemberTimeReports(reports []*model.MemberTimeReport, finalMonth time.Month) []*FiscalYearMemberTimeReport {
-	periods := make(map[dateutil.FiscalYear]*FiscalYearMemberTimeReport, 0)
+	periods := make(map[FiscalYear]*FiscalYearMemberTimeReport, 0)
 	for _, r := range reports {
-		fy := *dateutil.NewFiscalYear(r.Date.In(time.Local), finalMonth)
+		fy := *NewFiscalYear(r.Date.In(time.Local), finalMonth)
 		p, ok := periods[fy]
 		if !ok {
 			p = NewFiscalYearMemberTimeReport(r.UserID, fy)
@@ -40,13 +82,13 @@ func (a ByFiscalYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 type FiscalYearMemberTimeReport struct {
 	UserID     int
-	FiscalYear dateutil.FiscalYear
+	FiscalYear FiscalYear
 	Start      civil.Date
 	End        civil.Date
 	Reports    []*model.MemberTimeReport
 }
 
-func NewFiscalYearMemberTimeReport(userID int, fy dateutil.FiscalYear) *FiscalYearMemberTimeReport {
+func NewFiscalYearMemberTimeReport(userID int, fy FiscalYear) *FiscalYearMemberTimeReport {
 	return &FiscalYearMemberTimeReport{
 		UserID:     userID,
 		FiscalYear: fy,
@@ -123,7 +165,7 @@ func (tr *FiscalYearMemberTimeReport) Actual() float32 {
 }
 
 type FiscalYearTimeReport struct {
-	FiscalYear dateutil.FiscalYear
+	FiscalYear FiscalYear
 	Client     *model.Client
 	Project    *model.Project
 	Planned    float32

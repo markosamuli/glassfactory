@@ -1,25 +1,25 @@
 package reporting
 
 import (
-	"cloud.google.com/go/civil"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutil"
-	"github.com/markosamuli/glassfactory/model"
-	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
 	"sort"
+
+	"cloud.google.com/go/civil"
+	"github.com/markosamuli/glassfactory/model"
+	"github.com/olekukonko/tablewriter"
 )
 
 type MonthlyMemberTimeReport struct {
 	UserID        int
-	CalendarMonth dateutil.CalendarMonth
+	CalendarMonth CalendarMonth
 	Start         civil.Date
 	End           civil.Date
 	Reports       []*model.MemberTimeReport
 }
 
-func NewMonthlyMemberTimeReport(userID int, month dateutil.CalendarMonth) *MonthlyMemberTimeReport {
+func NewMonthlyMemberTimeReport(userID int, month CalendarMonth) *MonthlyMemberTimeReport {
 	return &MonthlyMemberTimeReport{
 		UserID:        userID,
 		CalendarMonth: month,
@@ -54,9 +54,12 @@ func (tr *MonthlyMemberTimeReport) Actual() float32 {
 }
 
 func MonthlyMemberTimeReports(reports []*model.MemberTimeReport) []*MonthlyMemberTimeReport {
-	months := make(map[dateutil.CalendarMonth]*MonthlyMemberTimeReport, 0)
+	months := make(map[CalendarMonth]*MonthlyMemberTimeReport, 0)
 	for _, r := range reports {
-		month := r.CalendarMonth()
+		month := CalendarMonth{
+			Year:  r.Date.Year,
+			Month: r.Date.Month,
+		}
 		mr, ok := months[month]
 		if !ok {
 			mr = NewMonthlyMemberTimeReport(r.UserID, month)
@@ -81,7 +84,7 @@ func (a ByCalendarMonth) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 
 type MonthlyTimeReport struct {
-	CalendarMonth dateutil.CalendarMonth
+	CalendarMonth CalendarMonth
 	Client        *model.Client
 	Project       *model.Project
 	Planned       float32

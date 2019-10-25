@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/markosamuli/glassfactory/api"
+	"github.com/markosamuli/glassfactory"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -26,13 +26,13 @@ var ( // Used for flags.
 	}
 )
 
-func createService() (*api.Service, error) {
+func createApiService() (*glassfactory.Service, error) {
 	ctx := context.Background()
-	gfs := api.GlassFactorySettings{}
+	gfs := glassfactory.Settings{}
 	gfs.AccountSubdomain = viper.GetString("account_subdomain")
 	gfs.UserEmail = viper.GetString("user_email")
 	gfs.UserToken = viper.GetString("user_token")
-	s, err := api.NewService(ctx, &gfs)
+	s, err := glassfactory.NewService(ctx, &gfs)
 	if err != nil {
 		return nil, err
 	}

@@ -1,7 +1,11 @@
 # Go library and CLI for Glass Factory
 
-This is a Go library and CLI for [Glass Factory](https://glassfactory.io/)
-resource management tool public APIs.
+This is a CLI for [Glass Factory] resource management tool.
+
+Uses APIs implemented in [github.com/markosamuli/glassfactory] package.
+
+[Glass Factory]: https://glassfactory.io/
+[github.com/markosamuli/glassfactory]: https://github.com/markosamuli/glassfactory
 
 ## Usage
 
@@ -10,7 +14,7 @@ resource management tool public APIs.
 Build the binary:
 
 ```bash
-go build github.com/markosamuli/glassfactory
+go build github.com/markosamuli/glassfactory-cli
 ```
 
 ### Configuration

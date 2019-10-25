@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
-	"github.com/markosamuli/glassfactory/dateutil"
 	"os"
 	"time"
 
+	"github.com/markosamuli/glassfactory"
+	"github.com/markosamuli/glassfactory-cli/reporting"
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +15,15 @@ func init() {
 	rootCmd.AddCommand(reportCmd)
 	reportCmd.AddCommand(monthlyReportsCmd)
 	reportCmd.AddCommand(fiscalYearReportCmd)
+}
+
+func createReportingService(api *glassfactory.Service) (*reporting.Service, error) {
+	ctx := context.Background()
+	r, err := reporting.NewService(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
 
 var reportCmd = &cobra.Command{
@@ -30,7 +41,7 @@ var monthlyReportsCmd = &cobra.Command{
 	Long:  `Print monthly time reports for the current calendar year`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		s, err := createService()
+		s, err := createApiService()
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -42,7 +53,13 @@ var monthlyReportsCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		monthlyReports, err := s.Reports.MonthlyMemberTimeReports(member.ID, time.Now())
+		r, err := createReportingService(s)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
+
+		monthlyReports, err := r.MonthlyMemberTimeReports(member.ID, time.Now())
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -60,7 +77,7 @@ var fiscalYearReportCmd = &cobra.Command{
 	Long:  `Print time reports for the current fiscal year`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		s, err := createService()
+		s, err := createApiService()
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -72,9 +89,16 @@ var fiscalYearReportCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+
+		r, err := createReportingService(s)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
+
 		fiscalYearFinalMonth := time.January
-		fiscalYear := dateutil.NewFiscalYear(time.Now().AddDate(-3, 0, 0), fiscalYearFinalMonth)
-		annualReports, err := s.Reports.FiscalYearMemberTimeReports(member.ID, fiscalYear)
+		fiscalYear := reporting.NewFiscalYear(time.Now().AddDate(-3, 0, 0), fiscalYearFinalMonth)
+		annualReports, err := r.FiscalYearMemberTimeReports(member.ID, fiscalYear)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
