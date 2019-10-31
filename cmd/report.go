@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/markosamuli/glassfactory-cli/reporting"
-	"github.com/markosamuli/glassfactory/glassfactory"
+	"github.com/markosamuli/glassfactory/api"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,7 @@ func init() {
 	reportCmd.AddCommand(fiscalYearReportCmd)
 }
 
-func createReportingService(api *glassfactory.Service) (*reporting.Service, error) {
+func createReportingService(api *api.Service) (*reporting.Service, error) {
 	ctx := context.Background()
 	r, err := reporting.NewService(ctx, api)
 	if err != nil {

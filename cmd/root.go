@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 
-	"github.com/markosamuli/glassfactory/glassfactory"
+	"github.com/markosamuli/glassfactory"
+	"github.com/markosamuli/glassfactory/api"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -15,28 +15,26 @@ const cfgName = ".glassfactory"
 const envPrefix = "gf"
 
 var ( // Used for flags.
-	cfgFile     string
+	cfgFile          string
 	accountSubdomain string
-	userEmail string
-	userToken string
-	rootCmd = &cobra.Command{
+	userEmail        string
+	userToken        string
+	rootCmd          = &cobra.Command{
 		Use:   "glassfactory",
 		Short: "Glass Factory reports tool",
-		Long: `CLI reports tool for Glass Factory.`,
+		Long:  `CLI reports tool for Glass Factory.`,
 	}
 )
 
-func createApiService() (*glassfactory.Service, error) {
-	ctx := context.Background()
-	gfs := glassfactory.Settings{}
-	gfs.AccountSubdomain = viper.GetString("account_subdomain")
-	gfs.UserEmail = viper.GetString("user_email")
-	gfs.UserToken = viper.GetString("user_token")
-	s, err := glassfactory.NewService(ctx, &gfs)
+func createApiService() (*api.Service, error) {
+	accountSubdomain := viper.GetString("account_subdomain")
+	userEmail := viper.GetString("user_email")
+	userToken := viper.GetString("user_token")
+	service, err := glassfactory.New(accountSubdomain, userEmail, userToken)
 	if err != nil {
 		return nil, err
 	}
-	return s, nil
+	return service, nil
 }
 
 // Execute executes the root command.

@@ -82,7 +82,6 @@ func (a ByCalendarMonth) Len() int           { return len(a) }
 func (a ByCalendarMonth) Less(i, j int) bool { return a[i].CalendarMonth.Before(a[j].CalendarMonth) }
 func (a ByCalendarMonth) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
-
 type MonthlyTimeReport struct {
 	CalendarMonth CalendarMonth
 	Client        *model.Client
@@ -96,7 +95,7 @@ func (r *MonthlyTimeReport) BillableStatus() string {
 }
 
 type MonthlyTimeReportTableWriter struct {
-	table *tablewriter.Table
+	table  *tablewriter.Table
 	totals map[string]*TimeReportTotals
 }
 
@@ -114,7 +113,7 @@ func NewMonthlyTimeReportTableWriter(writer io.Writer) *MonthlyTimeReportTableWr
 	table.SetAutoMergeCells(false)
 	table.SetRowLine(true)
 	return &MonthlyTimeReportTableWriter{
-		table: table,
+		table:  table,
 		totals: make(map[string]*TimeReportTotals),
 	}
 }
@@ -128,7 +127,7 @@ func (t *MonthlyTimeReportTableWriter) Append(r *MonthlyTimeReport) {
 		r.Project.Name,
 		fmt.Sprintf("%6.2f ", r.Actual),
 		fmt.Sprintf("%6.2f ", r.Planned),
-		fmt.Sprintf("%6.2f ", r.Actual - r.Planned),
+		fmt.Sprintf("%6.2f ", r.Actual-r.Planned),
 	})
 	totals, ok := t.totals[billable]
 	if !ok {
@@ -151,7 +150,7 @@ func (t *MonthlyTimeReportTableWriter) Render() {
 			totalHeader,
 			fmt.Sprintf("%6.2f ", totals.actual),
 			fmt.Sprintf("%6.2f ", totals.planned),
-			fmt.Sprintf("%6.2f ", totals.actual - totals.planned),
+			fmt.Sprintf("%6.2f ", totals.actual-totals.planned),
 		})
 		planned += totals.planned
 		actual += totals.actual
@@ -163,7 +162,7 @@ func (t *MonthlyTimeReportTableWriter) Render() {
 		"Total",
 		fmt.Sprintf("%6.2f ", actual),
 		fmt.Sprintf("%6.2f ", planned),
-		fmt.Sprintf("%6.2f ", actual - planned),
+		fmt.Sprintf("%6.2f ", actual-planned),
 	})
 	t.table.Render()
 }

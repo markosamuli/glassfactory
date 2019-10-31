@@ -11,11 +11,11 @@ import (
 
 // AnnualTimeReport represents a project time report for a calendar year
 type AnnualTimeReport struct {
-	Year int
-	Client *model.Client
+	Year    int
+	Client  *model.Client
 	Project *model.Project
 	Planned float64
-	Actual float64
+	Actual  float64
 }
 
 func (r *AnnualTimeReport) BillableStatus() string {
@@ -23,7 +23,7 @@ func (r *AnnualTimeReport) BillableStatus() string {
 }
 
 type AnnualTimeReportTableWriter struct {
-	table *tablewriter.Table
+	table  *tablewriter.Table
 	totals map[string]*TimeReportTotals
 }
 
@@ -41,7 +41,7 @@ func NewAnnualTimeReportTableWriter(writer io.Writer) *AnnualTimeReportTableWrit
 	table.SetAutoMergeCells(false)
 	table.SetRowLine(true)
 	return &AnnualTimeReportTableWriter{
-		table: table,
+		table:  table,
 		totals: make(map[string]*TimeReportTotals),
 	}
 }
@@ -55,7 +55,7 @@ func (t *AnnualTimeReportTableWriter) Append(r *AnnualTimeReport) {
 		r.Project.Name,
 		fmt.Sprintf("%6.2f ", r.Actual),
 		fmt.Sprintf("%6.2f ", r.Planned),
-		fmt.Sprintf("%6.2f ", r.Actual - r.Planned),
+		fmt.Sprintf("%6.2f ", r.Actual-r.Planned),
 	})
 	totals, ok := t.totals[billable]
 	if !ok {
@@ -78,7 +78,7 @@ func (t *AnnualTimeReportTableWriter) Render() {
 			totalHeader,
 			fmt.Sprintf("%6.2f ", totals.actual),
 			fmt.Sprintf("%6.2f ", totals.planned),
-			fmt.Sprintf("%6.2f ", totals.actual - totals.planned),
+			fmt.Sprintf("%6.2f ", totals.actual-totals.planned),
 		})
 		planned += totals.planned
 		actual += totals.actual
@@ -90,8 +90,7 @@ func (t *AnnualTimeReportTableWriter) Render() {
 		"Total",
 		fmt.Sprintf("%6.2f ", actual),
 		fmt.Sprintf("%6.2f ", planned),
-		fmt.Sprintf("%6.2f ", actual - planned),
+		fmt.Sprintf("%6.2f ", actual-planned),
 	})
 	t.table.Render()
 }
-

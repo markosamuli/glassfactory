@@ -8,18 +8,18 @@ import (
 )
 
 type ProjectMemberTimeReport struct {
-	UserID int
-	Client *model.Client
+	UserID  int
+	Client  *model.Client
 	Project *model.Project
-	Start dateutil.Date
-	End dateutil.Date
+	Start   dateutil.Date
+	End     dateutil.Date
 	Reports []*model.MemberTimeReport
 }
 
 func NewProjectMemberTimeReport(userID int, client *model.Client, project *model.Project) *ProjectMemberTimeReport {
 	return &ProjectMemberTimeReport{
-		UserID: userID,
-		Client: client,
+		UserID:  userID,
+		Client:  client,
 		Project: project,
 		Reports: make([]*model.MemberTimeReport, 0),
 	}
@@ -37,7 +37,7 @@ func (tr *ProjectMemberTimeReport) Append(r *model.MemberTimeReport) {
 
 func (tr *ProjectMemberTimeReport) Planned() float64 {
 	var planned float64
-	for  _, r := range tr.Reports {
+	for _, r := range tr.Reports {
 		planned += r.Planned
 	}
 	return planned
@@ -45,7 +45,7 @@ func (tr *ProjectMemberTimeReport) Planned() float64 {
 
 func (tr *ProjectMemberTimeReport) Actual() float64 {
 	var actual float64
-	for  _, r := range tr.Reports {
+	for _, r := range tr.Reports {
 		actual += r.Actual
 	}
 	return actual
@@ -62,7 +62,7 @@ func ProjectMemberTimeReports(reports []*model.MemberTimeReport) []*ProjectMembe
 		pr.Append(r)
 	}
 	pr := make([]*ProjectMemberTimeReport, 0, len(projects))
-	for  _, p := range projects {
+	for _, p := range projects {
 		pr = append(pr, p)
 	}
 	sort.Sort(ByClient(pr))

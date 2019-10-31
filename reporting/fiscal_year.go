@@ -7,6 +7,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/jinzhu/now"
 	"github.com/markosamuli/glassfactory/dateutil"
 	"github.com/markosamuli/glassfactory/model"
 	"github.com/olekukonko/tablewriter"
@@ -15,7 +16,7 @@ import (
 // FiscalYear represents a time range for a fiscal year
 type FiscalYear struct {
 	Start time.Time
-	End time.Time
+	End   time.Time
 }
 
 // String returns the fiscal year in FY YYYY format.
@@ -38,22 +39,22 @@ func NewFiscalYear(d time.Time, finalMonth time.Month) *FiscalYear {
 	var start time.Time
 	var end time.Time
 	if finalMonth < time.December {
-		start = time.Date(d.Year() - 1, finalMonth + 1, 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(d.Year(), finalMonth, 1, 0, 0, 0, 0, time.Local)
+		start = time.Date(d.Year()-1, finalMonth+1, 1, 0, 0, 0, 0, time.Local)
+		end = now.With(time.Date(d.Year(), finalMonth, 1, 23, 59, 59, 999999999, time.Local)).EndOfMonth()
 	} else {
 		start = time.Date(d.Year(), time.January, 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(d.Year(), time.December, 1, 0, 0, 0, 0, time.Local)
+		end = now.With(time.Date(d.Year(), time.December, 1, 23, 59, 59, 999999999, time.Local)).EndOfMonth()
 	}
 	if d.Before(start) {
-		start = start.AddDate(-1, 0 ,0)
-		end = end.AddDate(-1,0 ,0)
+		start = start.AddDate(-1, 0, 0)
+		end = end.AddDate(-1, 0, 0)
 	} else if d.After(end) {
-		start = start.AddDate(1, 0 ,0)
-		end = end.AddDate(1, 0 ,0)
+		start = start.AddDate(1, 0, 0)
+		end = end.AddDate(1, 0, 0)
 	}
 	return &FiscalYear{
 		Start: start,
-		End: end,
+		End:   end,
 	}
 }
 
@@ -180,7 +181,7 @@ func (r *FiscalYearTimeReport) BillableStatus() string {
 }
 
 type FiscalYearTimeReportTableWriter struct {
-	table *tablewriter.Table
+	table  *tablewriter.Table
 	totals map[string]*TimeReportTotals
 }
 
@@ -198,7 +199,7 @@ func NewFiscalYearTimeReportTableWriter(writer io.Writer) *FiscalYearTimeReportT
 	table.SetAutoMergeCells(false)
 	table.SetRowLine(true)
 	return &FiscalYearTimeReportTableWriter{
-		table: table,
+		table:  table,
 		totals: make(map[string]*TimeReportTotals),
 	}
 }
@@ -212,7 +213,7 @@ func (t *FiscalYearTimeReportTableWriter) Append(r *FiscalYearTimeReport) {
 		r.Project.Name,
 		fmt.Sprintf("%6.2f ", r.Actual),
 		fmt.Sprintf("%6.2f ", r.Planned),
-		fmt.Sprintf("%6.2f ", r.Actual - r.Planned),
+		fmt.Sprintf("%6.2f ", r.Actual-r.Planned),
 	})
 	totals, ok := t.totals[billable]
 	if !ok {
@@ -235,7 +236,7 @@ func (t *FiscalYearTimeReportTableWriter) Render() {
 			totalHeader,
 			fmt.Sprintf("%6.2f ", totals.actual),
 			fmt.Sprintf("%6.2f ", totals.planned),
-			fmt.Sprintf("%6.2f ", totals.actual - totals.planned),
+			fmt.Sprintf("%6.2f ", totals.actual-totals.planned),
 		})
 		planned += totals.planned
 		actual += totals.actual
@@ -247,7 +248,7 @@ func (t *FiscalYearTimeReportTableWriter) Render() {
 		"Total",
 		fmt.Sprintf("%6.2f ", actual),
 		fmt.Sprintf("%6.2f ", planned),
-		fmt.Sprintf("%6.2f ", actual - planned),
+		fmt.Sprintf("%6.2f ", actual-planned),
 	})
 	t.table.Render()
 }
