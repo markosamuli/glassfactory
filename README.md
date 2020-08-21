@@ -3,7 +3,6 @@
 This is a CLI for [Glass Factory] resource management tool.
 
 [Glass Factory]: https://glassfactory.io/
-[github.com/markosamuli/glassfactory]: https://github.com/markosamuli/glassfactory
 
 ## Usage
 
