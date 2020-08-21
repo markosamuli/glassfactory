@@ -2,8 +2,6 @@
 
 This is a CLI for [Glass Factory] resource management tool.
 
-Uses APIs implemented in [github.com/markosamuli/glassfactory] package.
-
 [Glass Factory]: https://glassfactory.io/
 [github.com/markosamuli/glassfactory]: https://github.com/markosamuli/glassfactory
 

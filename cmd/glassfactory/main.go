@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/markosamuli/glassfactory-cli/pkg/cmd/root"
+	"github.com/markosamuli/glassfactory/internal/cmd/root"
 )
 
 func main() {
