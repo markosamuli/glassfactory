@@ -14,26 +14,32 @@ Uses APIs implemented in [github.com/markosamuli/glassfactory] package.
 Build the binary:
 
 ```bash
-go build github.com/markosamuli/glassfactory-cli
+make build
+```
+
+Install the binary:
+
+```bash
+make install
 ```
 
 ### Configuration
 
-Create a configuration file:
+Authenticate and create a configuration file:
 
 ```bash
-glassfactory config
+glassfactory auth login
 ```
 
 ### Reports
 
-Generate report for current fiscal year:
+Generate report for the current fiscal year:
 
 ```bash
 glassfactory report fy
 ```
 
-Generate monthly reports for current calendar year:
+Generate monthly reports for the current calendar year:
 
 ```bash
 glassfactory report monthly
@@ -41,8 +47,8 @@ glassfactory report monthly
 
 ## License
 
-* [MIT License](LICENSE)
+[MIT License](LICENSE)
 
 ## Author Information
 
-* [@markosamuli](https://github.com/markosamuli)
+[markosamuli](https://github.com/markosamuli)

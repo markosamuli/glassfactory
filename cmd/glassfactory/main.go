@@ -2,9 +2,9 @@
 package main
 
 import (
-	"github.com/markosamuli/glassfactory-cli/cmd"
+	"github.com/markosamuli/glassfactory-cli/pkg/cmd/root"
 )
 
 func main() {
-	cmd.Execute()
+	root.Execute()
 }
