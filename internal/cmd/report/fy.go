@@ -54,7 +54,7 @@ func (o *FiscalYearReportOptions) Run(cmd *cobra.Command) error {
 	}
 
 	fiscalYearFinalMonth := time.January
-	fiscalYear := reporting.NewFiscalYear(time.Now().AddDate(-3, 0, 0), fiscalYearFinalMonth)
+	fiscalYear := reporting.NewFiscalYear(time.Now(), fiscalYearFinalMonth)
 	annualReports, err := r.FiscalYearMemberTimeReports(member.ID, fiscalYear)
 	if err != nil {
 		return err
