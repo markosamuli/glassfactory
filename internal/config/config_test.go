@@ -2,15 +2,16 @@ package config
 
 import (
 	"fmt"
-	"github.com/markosamuli/glassfactory/internal/auth"
-	"github.com/spf13/viper"
-	"gotest.tools/assert"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"syscall"
 	"testing"
+
+	"github.com/markosamuli/glassfactory/internal/auth"
+	"github.com/spf13/viper"
+	"gotest.tools/assert"
 )
 
 var testConfig = `

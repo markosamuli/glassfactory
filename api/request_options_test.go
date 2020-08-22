@@ -1,32 +1,33 @@
 package api
 
 import (
-	"gotest.tools/assert"
 	"testing"
+
+	"gotest.tools/assert"
 )
 
 func TestWithCache(t *testing.T) {
 	var tests = []struct {
-		name string
+		name     string
 		option   RequestOption
 		expected RequestOptions
 	}{
 		{
-			name: "caching is enabled by default",
+			name:   "caching is enabled by default",
 			option: nil,
 			expected: RequestOptions{
 				cache: true,
 			},
 		},
 		{
-			name: "enable cache",
+			name:   "enable cache",
 			option: WithCache(true),
 			expected: RequestOptions{
 				cache: true,
 			},
 		},
 		{
-			name: "disable cache",
+			name:   "disable cache",
 			option: WithCache(false),
 			expected: RequestOptions{
 				cache: false,
@@ -36,7 +37,7 @@ func TestWithCache(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var (
-				opts = make([]RequestOption, 0)
+				opts  = make([]RequestOption, 0)
 				value *RequestOptions
 			)
 			if tt.option != nil {
@@ -50,33 +51,33 @@ func TestWithCache(t *testing.T) {
 
 func TestWithStatus(t *testing.T) {
 	var tests = []struct {
-		name string
+		name     string
 		option   RequestOption
 		expected RequestOptions
 	}{
 		{
-			name: "status is empty by default",
+			name:   "status is empty by default",
 			option: nil,
 			expected: RequestOptions{
 				status: "",
 			},
 		},
 		{
-			name: "active members",
+			name:   "active members",
 			option: WithStatus(memberStatusActive),
 			expected: RequestOptions{
 				status: memberStatusActive,
 			},
 		},
 		{
-			name: "archived members",
+			name:   "archived members",
 			option: WithStatus(memberStatusArchived),
 			expected: RequestOptions{
 				status: memberStatusArchived,
 			},
 		},
 		{
-			name: "all members",
+			name:   "all members",
 			option: WithStatus(memberStatusAll),
 			expected: RequestOptions{
 				status: memberStatusAll,
@@ -86,7 +87,7 @@ func TestWithStatus(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var (
-				opts = make([]RequestOption, 0)
+				opts  = make([]RequestOption, 0)
 				value *RequestOptions
 			)
 			if tt.option != nil {
@@ -100,19 +101,19 @@ func TestWithStatus(t *testing.T) {
 
 func TestWithTerm(t *testing.T) {
 	var tests = []struct {
-		name string
+		name     string
 		option   RequestOption
 		expected RequestOptions
 	}{
 		{
-			name: "term is empty by default",
+			name:   "term is empty by default",
 			option: nil,
 			expected: RequestOptions{
 				term: "",
 			},
 		},
 		{
-			name: "search by term",
+			name:   "search by term",
 			option: WithTerm("foobar"),
 			expected: RequestOptions{
 				term: "foobar",
@@ -122,7 +123,7 @@ func TestWithTerm(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var (
-				opts = make([]RequestOption, 0)
+				opts  = make([]RequestOption, 0)
 				value *RequestOptions
 			)
 			if tt.option != nil {
