@@ -35,7 +35,7 @@ func (r *MemberReportsService) GetTimeReportsBetweenDates(userID int, start time
 		return nil, err
 	}
 
-	options := timeReportOptions{
+	options := TimeReportOptions{
 		fetchRelated: false, // Do not fetch related data by default
 	}
 	options.apply(opts)
@@ -106,65 +106,6 @@ func (r *MemberReportsService) TimeReportsBetweenDates(userID int, start time.Ti
 	return calls
 }
 
-type timeReportOptions struct {
-	clientID     int   // Client ID
-	projectIDs   []int // Project IDs separated by comma
-	officeID     int   // Office ID
-	fetchRelated bool  // Fetch related data into the results
-}
-
-func (options *timeReportOptions) apply(opts []TimeReportOption) {
-	for _, o := range opts {
-		o.apply(options)
-	}
-}
-
-// TimeReportOption overrides behavior of TimeReport
-type TimeReportOption interface {
-	apply(*timeReportOptions)
-}
-
-type timeReportOptionFunc func(*timeReportOptions)
-
-func (f timeReportOptionFunc) apply(o *timeReportOptions) {
-	f(o)
-}
-
-// WithClient returns time reports matching the given client
-func WithClient(clientID int) TimeReportOption {
-	return timeReportOptionFunc(func(o *timeReportOptions) {
-		o.clientID = clientID
-	})
-}
-
-// WithProject returns time reports matching the given project
-func WithProject(projectID int) TimeReportOption {
-	return timeReportOptionFunc(func(o *timeReportOptions) {
-		o.projectIDs = append(o.projectIDs, projectID)
-	})
-}
-
-// WithProjects returns time reports matching the given projects
-func WithProjects(projectIDs []int) TimeReportOption {
-	return timeReportOptionFunc(func(o *timeReportOptions) {
-		o.projectIDs = projectIDs
-	})
-}
-
-// WithOffice returns time reports matching the given office
-func WithOffice(officeID int) TimeReportOption {
-	return timeReportOptionFunc(func(o *timeReportOptions) {
-		o.officeID = officeID
-	})
-}
-
-// FetchRelated fetches the related data into the results
-func FetchRelated() TimeReportOption {
-	return timeReportOptionFunc(func(o *timeReportOptions) {
-		o.fetchRelated = true
-	})
-}
-
 // MemberTimeReportCall is used for fetching time reports for given time period from Glass Factory
 type MemberTimeReportCall struct {
 	s       *Service
@@ -176,8 +117,8 @@ type MemberTimeReportCall struct {
 }
 
 // Options returns request options with defaults
-func (c *MemberTimeReportCall) Options() timeReportOptions {
-	options := timeReportOptions{}
+func (c *MemberTimeReportCall) Options() TimeReportOptions {
+	options := TimeReportOptions{}
 	options.apply(c.options)
 	return options
 }
