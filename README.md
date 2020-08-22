@@ -1,5 +1,7 @@
 # Go library and CLI for Glass Factory
 
+![Test](https://github.com/markosamuli/glassfactory/workflows/Test/badge.svg)
+
 This is a CLI for [Glass Factory] resource management tool.
 
 [Glass Factory]: https://glassfactory.io/
