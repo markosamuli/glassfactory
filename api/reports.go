@@ -15,7 +15,7 @@ import (
 	"github.com/markosamuli/glassfactory/pkg/dateutil"
 )
 
-// NewReportsService creates a new MemberReportsService
+// NewMemberReportsService creates a new MemberReportsService
 func NewMemberReportsService(m *MemberService) *MemberReportsService {
 	rs := &MemberReportsService{m: m}
 	rs.clock = clock.New()
@@ -79,7 +79,7 @@ func (r *MemberReportsService) TimeReport(userID int, start time.Time, end time.
 	return c
 }
 
-// MemberTimeReportsForYear creates multiple calls for fetching member time reports for a full calendar year matching the given date
+// TimeReportsBetweenDates creates MemberTimeReportCalls to be used for fetching member time reports between the given dates
 func (r *MemberReportsService) TimeReportsBetweenDates(userID int, start time.Time, end time.Time, opts ...TimeReportOption) *MemberTimeReportCalls {
 	today := time.Now()
 	if start.After(today) {
@@ -254,7 +254,7 @@ func (c *MemberTimeReportCall) Do() (*MemberTimeReportResponse, error) {
 	return ret, nil
 }
 
-// MemberTimeReportCall is used for fetching multiple time reports from Glass Factory
+// MemberTimeReportCalls is used for fetching multiple time reports from Glass Factory
 type MemberTimeReportCalls struct {
 	s       *Service
 	userID  int

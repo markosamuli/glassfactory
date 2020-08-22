@@ -19,7 +19,7 @@ func NewService(ctx context.Context, apiService *api.Service) (*Service, error) 
 	return s, nil
 }
 
-// ReportsService provides methods for fetching time report data from Glass Factory
+// Service provides methods for fetching time report data from Glass Factory
 type Service struct {
 	api *api.Service
 }
@@ -35,7 +35,7 @@ func (s *Service) MonthlyMemberTimeReports(userID int, t time.Time) ([]*MonthlyM
 	return MonthlyMemberTimeReports(reports), nil
 }
 
-// MonthlyMemberTimeReports queries Glass Factory and returns time reports for the given fiscal year
+// FiscalYearMemberTimeReports queries Glass Factory and returns time reports for the given fiscal year
 func (s *Service) FiscalYearMemberTimeReports(userID int, fiscalYear *FiscalYear) ([]*FiscalYearMemberTimeReport, error) {
 	start := fiscalYear.Start
 	end := fiscalYear.End

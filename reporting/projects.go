@@ -69,7 +69,7 @@ func ProjectMemberTimeReports(reports []*model.MemberTimeReport) []*ProjectMembe
 	return pr
 }
 
-// ByClientID implements sort.Interface based on the ClientID field.
+// ByClient implements sort.Interface based on the Client.ID field.
 type ByClient []*ProjectMemberTimeReport
 
 func (a ByClient) Len() int           { return len(a) }

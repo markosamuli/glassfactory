@@ -77,7 +77,7 @@ func FiscalYearMemberTimeReports(reports []*model.MemberTimeReport, finalMonth t
 	return fyr
 }
 
-// ByCalendarMonth implements sort.Interface based on the CalendarMonth field.
+// ByFiscalYear implements sort.Interface based on the FiscalYear field.
 type ByFiscalYear []*FiscalYearMemberTimeReport
 
 func (a ByFiscalYear) Len() int           { return len(a) }

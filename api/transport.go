@@ -8,7 +8,7 @@ import (
 
 const publicAPI = "https://%s.glassfactory.io/api/public/v1/"
 
-// Transport for the HTTP client provides the custom authentication headers
+// AuthTransport for the HTTP client provides the custom authentication headers
 type AuthTransport struct {
 	UserEmail        string
 	UserToken        string
