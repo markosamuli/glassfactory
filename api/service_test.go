@@ -101,7 +101,7 @@ func TestGetCurrentMember(t *testing.T) {
 	assert.Assert(t, gock.IsDone(), "all mocks should have been called")
 }
 
-func newHttpResponseWithJsonBody(body string) *http.Response {
+func newHTTPResponseWithJSONBody(body string) *http.Response {
 	header := http.Header{}
 	header.Add("Content-Type", "application/json, charset=UTF-8")
 	return &http.Response{
@@ -154,7 +154,7 @@ func TestDecodeResponse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res := newHttpResponseWithJsonBody(tt.body)
+			res := newHTTPResponseWithJSONBody(tt.body)
 			err := DecodeResponse(&tt.target, res)
 			assert.NilError(t, err)
 		})
