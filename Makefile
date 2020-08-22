@@ -6,6 +6,8 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOFMT=$(GOCMD) fmt
+GOVET=$(GOCMD) vet
+GOLINT=golint
 
 # Build parameters
 BINARY_NAME=glassfactory
@@ -27,6 +29,11 @@ install: $(BINARY_OUT)
 .PHONY: uninstall
 uninstall:
 	rm /usr/local/bin/$(BINARY_NAME)
+
+.PHONY:
+lint:
+	$(GOVET) ./...
+	$(GOLINT) ./...
 
 .PHONY: format
 format:
