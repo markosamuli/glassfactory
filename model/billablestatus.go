@@ -4,12 +4,17 @@ import "fmt"
 
 //go:generate stringer -type=BillableStatus -linecomment
 
+// BillableStatus represents the billable status in time reports
 type BillableStatus int
 
 const (
+	// Unknown represents undefined values
 	Unknown BillableStatus = iota
+	// Billable represents billable hours
 	Billable
+	// NonBillable represents non-billable hours
 	NonBillable // Non Billable
+	// NewBusiness represents new business hours
 	NewBusiness // New Business
 )
 
