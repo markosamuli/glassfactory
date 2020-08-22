@@ -37,7 +37,7 @@ lint:
 
 .PHONY: format
 format:
-	$(GOFMT)
+	$(GOFMT) ./...
 
 .PHONY: clean
 clean:
