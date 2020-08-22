@@ -23,7 +23,7 @@ type ProjectService struct {
 }
 
 // All returns all projects in the Glass Factory account
-func (r *ProjectService) All(opts ...Option) ([]*model.Project, error) {
+func (r *ProjectService) All(opts ...RequestOption) ([]*model.Project, error) {
 	res, err := r.List(opts...).Do()
 	if err != nil {
 		return nil, err
@@ -32,8 +32,8 @@ func (r *ProjectService) All(opts ...Option) ([]*model.Project, error) {
 }
 
 // Get returns a project from Glass Factory
-func (r *ProjectService) Get(projectID int, opts ...Option) (*model.Project, error) {
-	options := Options(opts)
+func (r *ProjectService) Get(projectID int, opts ...RequestOption) (*model.Project, error) {
+	options := NewRequestOptions(opts)
 	if options.cache {
 		project, ok := r.projects.Get(projectID)
 		if ok {
@@ -58,7 +58,7 @@ func (r *ProjectService) Details(projectID int) *ProjectDetailsCall {
 }
 
 // List returns a list of projects in the Glass Factory account
-func (r *ProjectService) List(opts ...Option) *ProjectListCall {
+func (r *ProjectService) List(opts ...RequestOption) *ProjectListCall {
 	c := &ProjectListCall{s: r.s}
 	c.options = opts
 	return c
@@ -115,12 +115,12 @@ func (c *ProjectDetailsCall) Do() (*ProjectDetailsResponse, error) {
 // ProjectListCall represents a request to List Account's PRojects API
 type ProjectListCall struct {
 	s       *Service
-	options []Option
+	options []RequestOption
 }
 
 // Options returns request options with defaults
-func (c *ProjectListCall) Options() options {
-	options := options{}
+func (c *ProjectListCall) Options() RequestOptions {
+	options := RequestOptions{}
 	options.apply(c.options)
 	return options
 }

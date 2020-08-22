@@ -23,7 +23,7 @@ type ClientService struct {
 }
 
 // All returns all clients in the Glass Factory account
-func (r *ClientService) All(opts ...Option) ([]*model.Client, error) {
+func (r *ClientService) All(opts ...RequestOption) ([]*model.Client, error) {
 	res, err := r.List(opts...).Do()
 	if err != nil {
 		return nil, err
@@ -32,8 +32,8 @@ func (r *ClientService) All(opts ...Option) ([]*model.Client, error) {
 }
 
 // Get returns a client from Glass Factory
-func (r *ClientService) Get(clientID int, opts ...Option) (*model.Client, error) {
-	options := Options(opts)
+func (r *ClientService) Get(clientID int, opts ...RequestOption) (*model.Client, error) {
+	options := NewRequestOptions(opts)
 	if options.cache {
 		client, ok := r.clients.Get(clientID)
 		if ok {
@@ -58,7 +58,7 @@ func (r *ClientService) Details(clientID int) *ClientDetailsCall {
 }
 
 // List returns a list of clients in the Glass Factory account
-func (r *ClientService) List(opts ...Option) *ClientListCall {
+func (r *ClientService) List(opts ...RequestOption) *ClientListCall {
 	c := &ClientListCall{s: r.s}
 	c.options = opts
 	return c
@@ -115,12 +115,12 @@ func (c *ClientDetailsCall) Do() (*ClientDetailsResponse, error) {
 // ClientListCall represents a request to List Account's Clients API
 type ClientListCall struct {
 	s       *Service
-	options []Option
+	options []RequestOption
 }
 
 // Options returns request options with defaults
-func (c *ClientListCall) Options() options {
-	options := options{}
+func (c *ClientListCall) Options() RequestOptions {
+	options := RequestOptions{}
 	options.apply(c.options)
 	return options
 }

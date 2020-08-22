@@ -31,12 +31,12 @@ type MemberService struct {
 // GetActive returns all active members in the Glass Factory account
 //
 // Deprecated: Use MemberService.Active()
-func (r *MemberService) GetActive(opts ...Option) ([]*model.Member, error) {
+func (r *MemberService) GetActive(opts ...RequestOption) ([]*model.Member, error) {
 	return r.Active(opts...)
 }
 
 // Active returns all active members in the Glass Factory account
-func (r *MemberService) Active(opts ...Option) ([]*model.Member, error) {
+func (r *MemberService) Active(opts ...RequestOption) ([]*model.Member, error) {
 	opts = append(opts, WithStatus(memberStatusActive))
 	res, err := r.List(opts...).Do()
 	if err != nil {
@@ -46,7 +46,7 @@ func (r *MemberService) Active(opts ...Option) ([]*model.Member, error) {
 }
 
 // All returns all members in the Glass Factory account
-func (r *MemberService) All(opts ...Option) ([]*model.Member, error) {
+func (r *MemberService) All(opts ...RequestOption) ([]*model.Member, error) {
 	opts = append(opts, WithStatus(memberStatusAll))
 	res, err := r.List(opts...).Do()
 	if err != nil {
@@ -55,9 +55,9 @@ func (r *MemberService) All(opts ...Option) ([]*model.Member, error) {
 	return res.Members, nil
 }
 
-// GetActive returns a member from Glass Factory
-func (r *MemberService) Get(userID int, opts ...Option) (*model.Member, error) {
-	options := Options(opts)
+// Get returns a member from Glass Factory by their user ID
+func (r *MemberService) Get(userID int, opts ...RequestOption) (*model.Member, error) {
+	options := NewRequestOptions(opts)
 	if options.cache {
 		member, ok := r.members.Get(userID)
 		if ok {
@@ -85,7 +85,7 @@ func (r *MemberService) Details(userID int) *MemberDetailsCall {
 // with matching email address.
 //
 // Deprecated: Filter members outside the service.
-func (r *MemberService) FindByEmail(email string, opts ...Option) (*model.Member, error) {
+func (r *MemberService) FindByEmail(email string, opts ...RequestOption) (*model.Member, error) {
 	res, err := r.List(opts...).Do()
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (r *MemberService) SearchActive(term string) *MemberListCall {
 }
 
 // List returns a list of staff members in the Glass Factory account
-func (r *MemberService) List(opts ...Option) *MemberListCall {
+func (r *MemberService) List(opts ...RequestOption) *MemberListCall {
 	c := &MemberListCall{s: r.s}
 	c.options = opts
 	return c
@@ -181,12 +181,12 @@ func (c *MemberDetailsCall) Do() (*MemberDetailsResponse, error) {
 // MemberListCall represents a request to List Staff Members API
 type MemberListCall struct {
 	s       *Service
-	options []Option
+	options []RequestOption
 }
 
 // Options returns request options with defaults
-func (c *MemberListCall) Options() options {
-	options := options{
+func (c *MemberListCall) Options() RequestOptions {
+	options := RequestOptions{
 		status: memberStatusAll,
 	}
 	options.apply(c.options)
