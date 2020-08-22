@@ -7,6 +7,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOFMT=$(GOCMD) fmt
 GOVET=$(GOCMD) vet
+GOTEST=$(GOCMD) test
 GOLINT=golint
 
 # Build parameters
@@ -14,7 +15,7 @@ BINARY_NAME=glassfactory
 BINARY_OUT=bin/$(BINARY_NAME)
 
 .PHONY: all
-all: build
+all: test build
 
 .PHONY: build
 build: $(BINARY_OUT)
@@ -38,6 +39,10 @@ lint:
 .PHONY: format
 format:
 	$(GOFMT) ./...
+
+.PHONY: format
+test:
+	$(GOTEST) ./...
 
 .PHONY: clean
 clean:
