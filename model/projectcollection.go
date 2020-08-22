@@ -1,6 +1,5 @@
 package model
 
-
 // ProjectCollection represents unique set of projects
 type ProjectCollection struct {
 	projects map[int]*Project

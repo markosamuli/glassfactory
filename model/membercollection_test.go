@@ -15,7 +15,7 @@ func TestMemberCollection(t *testing.T) {
 	assert.Equal(t, c.Count(), 1)
 
 	var (
-		m *Member
+		m  *Member
 		ok bool
 	)
 	m, ok = c.Get(1)

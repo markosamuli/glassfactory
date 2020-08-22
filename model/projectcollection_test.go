@@ -24,18 +24,18 @@ func TestProjectCollection(t *testing.T) {
 	c.Add(p2)
 	assert.Equal(t, c.Count(), 2)
 
-	p = c.Filter(func (member *Project) bool {
+	p = c.Filter(func(member *Project) bool {
 		return member.Name == "First Project"
 	}).Take()
 	assert.Equal(t, p, p1)
 
 	var pc int
-	pc = c.Filter(func (member *Project) bool {
+	pc = c.Filter(func(member *Project) bool {
 		return member.Name == "Non-existing Project"
 	}).Count()
 	assert.Equal(t, pc, 0)
 
-	p = c.Filter(func (member *Project) bool {
+	p = c.Filter(func(member *Project) bool {
 		return member.Name == "Non-existing Project"
 	}).Take()
 	var np *Project

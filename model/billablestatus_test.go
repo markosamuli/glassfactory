@@ -34,7 +34,7 @@ func TestBillableStatus(t *testing.T) {
 		BillableStatus BillableStatus `json:"billable_status"`
 	}
 	var tests = []struct {
-		data string
+		data       string
 		wantValue  BillableStatus
 		wantString string
 	}{
@@ -42,28 +42,28 @@ func TestBillableStatus(t *testing.T) {
 			data: `{
 			  "billable_status": null
 			}`,
-			wantValue: Unknown,
+			wantValue:  Unknown,
 			wantString: "Unknown",
 		},
 		{
 			data: `{
 			  "billable_status": "billable"
 			}`,
-			wantValue: Billable,
+			wantValue:  Billable,
 			wantString: "Billable",
 		},
 		{
 			data: `{
 			  "billable_status": "non_billable"
 			}`,
-			wantValue: NonBillable,
+			wantValue:  NonBillable,
 			wantString: "Non Billable",
 		},
 		{
 			data: `{
 			  "billable_status": "new_business"
 			}`,
-			wantValue: NewBusiness,
+			wantValue:  NewBusiness,
 			wantString: "New Business",
 		},
 	}
@@ -79,4 +79,3 @@ func TestBillableStatus(t *testing.T) {
 		})
 	}
 }
-

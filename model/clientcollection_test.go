@@ -22,19 +22,19 @@ func TestClientCollection(t *testing.T) {
 	c.Add(c2)
 	assert.Equal(t, c.Count(), 2, "Count() should correct value of clients in the collection")
 
-	ct = c.Filter(func (client *Client) bool {
+	ct = c.Filter(func(client *Client) bool {
 		return client.Name == "First Client"
 	}).Take()
 	assert.Equal(t, ct, c1, "Take() should return a client from the collection")
 
 	var nc *Client
-	ct = c.Filter(func (client *Client) bool {
+	ct = c.Filter(func(client *Client) bool {
 		return client.Name == "Non-existing Client"
 	}).Take()
 	assert.Equal(t, ct, nc, "Take() should return nil when there are no clients in the collection")
 
 	var cc int
-	cc = c.Filter(func (client *Client) bool {
+	cc = c.Filter(func(client *Client) bool {
 		return client.Name == "Non-existing Client"
 	}).Count()
 	assert.Equal(t, cc, 0, "Count() should correct value of clients in the collection")

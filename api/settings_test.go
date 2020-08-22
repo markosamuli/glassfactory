@@ -8,39 +8,39 @@ import (
 
 func TestNewSettings(t *testing.T) {
 	var tests = []struct {
-		name string
-		account   string
-		email string
+		name    string
+		account string
+		email   string
 		token   string
-		err string
+		err     string
 	}{
 		{
-			name: "all missing",
+			name:    "all missing",
 			account: "",
-			email: "",
-			token: "",
-			err: "user email missing",
+			email:   "",
+			token:   "",
+			err:     "user email missing",
 		},
 		{
-			name: "user API key missing",
+			name:    "user API key missing",
 			account: "example",
-			email: "test@example.com",
-			token: "",
-			err: "user API key missing",
+			email:   "test@example.com",
+			token:   "",
+			err:     "user API key missing",
 		},
 		{
-			name: "account subdomain missing",
+			name:    "account subdomain missing",
 			account: "",
-			email: "test@example.com",
-			token: "abcdefg1234",
-			err: "account subdomain missing",
+			email:   "test@example.com",
+			token:   "abcdefg1234",
+			err:     "account subdomain missing",
 		},
 		{
-			name: "valid",
+			name:    "valid",
 			account: "example",
-			email: "test@example.com",
-			token: "abcdefg1234",
-			err: "",
+			email:   "test@example.com",
+			token:   "abcdefg1234",
+			err:     "",
 		},
 	}
 	for _, tt := range tests {
