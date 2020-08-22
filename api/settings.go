@@ -11,6 +11,7 @@ type Settings struct {
 	AccountSubdomain string
 }
 
+// NewSettings creates new Settings for API authentication and validates them
 func NewSettings(account string, email string, token string) (*Settings, error) {
 	settings := &Settings{}
 	settings.AccountSubdomain = account
