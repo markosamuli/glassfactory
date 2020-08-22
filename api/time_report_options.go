@@ -59,3 +59,14 @@ func FetchRelated() TimeReportOption {
 		o.fetchRelated = true
 	})
 }
+
+// NewTimeReportOptions returns TimeReportOptions with defaults
+func NewTimeReportOptions(opts []TimeReportOption) *TimeReportOptions {
+	options := &TimeReportOptions{
+		fetchRelated: false, // Do not fetch related data by default
+	}
+	for _, o := range opts {
+		o.apply(options)
+	}
+	return options
+}

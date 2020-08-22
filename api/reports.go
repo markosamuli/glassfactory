@@ -35,10 +35,7 @@ func (r *MemberReportsService) GetTimeReportsBetweenDates(userID int, start time
 		return nil, err
 	}
 
-	options := TimeReportOptions{
-		fetchRelated: false, // Do not fetch related data by default
-	}
-	options.apply(opts)
+	options := NewTimeReportOptions(opts)
 
 	reports := make([]*model.MemberTimeReport, 0)
 	for _, response := range responses {
