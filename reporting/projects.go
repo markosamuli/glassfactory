@@ -7,6 +7,7 @@ import (
 	"github.com/markosamuli/glassfactory/pkg/dateutil"
 )
 
+// ProjectMemberTimeReport represents time report data for a given project and team member
 type ProjectMemberTimeReport struct {
 	UserID  int
 	Client  *model.Client
@@ -16,6 +17,7 @@ type ProjectMemberTimeReport struct {
 	Reports []*model.MemberTimeReport
 }
 
+// NewProjectMemberTimeReport creates a new ProjectMemberTimeReport for the given project and user
 func NewProjectMemberTimeReport(userID int, client *model.Client, project *model.Project) *ProjectMemberTimeReport {
 	return &ProjectMemberTimeReport{
 		UserID:  userID,
@@ -25,6 +27,7 @@ func NewProjectMemberTimeReport(userID int, client *model.Client, project *model
 	}
 }
 
+// Append adds time report data to the report
 func (tr *ProjectMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
@@ -35,6 +38,7 @@ func (tr *ProjectMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
+// Planned returns total planned hours
 func (tr *ProjectMemberTimeReport) Planned() float64 {
 	var planned float64
 	for _, r := range tr.Reports {
@@ -43,6 +47,7 @@ func (tr *ProjectMemberTimeReport) Planned() float64 {
 	return planned
 }
 
+// Actual returns total actual hours
 func (tr *ProjectMemberTimeReport) Actual() float64 {
 	var actual float64
 	for _, r := range tr.Reports {
@@ -51,6 +56,7 @@ func (tr *ProjectMemberTimeReport) Actual() float64 {
 	return actual
 }
 
+// ProjectMemberTimeReports converts MemberTimeReport to ProjectMemberTimeReport grouped by projects
 func ProjectMemberTimeReports(reports []*model.MemberTimeReport) []*ProjectMemberTimeReport {
 	projects := make(map[int]*ProjectMemberTimeReport, 0)
 	for _, r := range reports {

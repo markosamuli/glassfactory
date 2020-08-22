@@ -11,6 +11,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+// MonthlyMemberTimeReport represents user's time report data for a given month
 type MonthlyMemberTimeReport struct {
 	UserID        int
 	CalendarMonth CalendarMonth
@@ -19,6 +20,7 @@ type MonthlyMemberTimeReport struct {
 	Reports       []*model.MemberTimeReport
 }
 
+// NewMonthlyMemberTimeReport creates a new monthly time report
 func NewMonthlyMemberTimeReport(userID int, month CalendarMonth) *MonthlyMemberTimeReport {
 	return &MonthlyMemberTimeReport{
 		UserID:        userID,
@@ -27,6 +29,7 @@ func NewMonthlyMemberTimeReport(userID int, month CalendarMonth) *MonthlyMemberT
 	}
 }
 
+// Append time report data to the monthly report
 func (tr *MonthlyMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
@@ -37,6 +40,7 @@ func (tr *MonthlyMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
+// Planned returns total planned hours
 func (tr *MonthlyMemberTimeReport) Planned() float64 {
 	var planned float64
 	for _, r := range tr.Reports {
@@ -45,6 +49,7 @@ func (tr *MonthlyMemberTimeReport) Planned() float64 {
 	return planned
 }
 
+// Actual returns total actual hours
 func (tr *MonthlyMemberTimeReport) Actual() float64 {
 	var actual float64
 	for _, r := range tr.Reports {
@@ -53,6 +58,7 @@ func (tr *MonthlyMemberTimeReport) Actual() float64 {
 	return actual
 }
 
+// MonthlyMemberTimeReports converts MemberTimeReport to MonthlyMemberTimeReport grouped by the calendar months
 func MonthlyMemberTimeReports(reports []*model.MemberTimeReport) []*MonthlyMemberTimeReport {
 	months := make(map[CalendarMonth]*MonthlyMemberTimeReport, 0)
 	for _, r := range reports {
@@ -82,6 +88,7 @@ func (a ByCalendarMonth) Len() int           { return len(a) }
 func (a ByCalendarMonth) Less(i, j int) bool { return a[i].CalendarMonth.Before(a[j].CalendarMonth) }
 func (a ByCalendarMonth) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
+// MonthlyTimeReport represents time report data for a calendar month
 type MonthlyTimeReport struct {
 	CalendarMonth CalendarMonth
 	Client        *model.Client
@@ -90,15 +97,18 @@ type MonthlyTimeReport struct {
 	Actual        float64
 }
 
+// BillableStatus returns project's billable status
 func (r *MonthlyTimeReport) BillableStatus() string {
 	return FormatBillableStatus(r.Project.BillableStatus)
 }
 
+// MonthlyTimeReportTableWriter is used for displaying monthly time report data in a table format
 type MonthlyTimeReportTableWriter struct {
 	table  *tablewriter.Table
 	totals map[string]*TimeReportTotals
 }
 
+// NewMonthlyTimeReportTableWriter creates a new MonthlyTimeReportTableWriter
 func NewMonthlyTimeReportTableWriter(writer io.Writer) *MonthlyTimeReportTableWriter {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
@@ -118,6 +128,7 @@ func NewMonthlyTimeReportTableWriter(writer io.Writer) *MonthlyTimeReportTableWr
 	}
 }
 
+// Append adds time report data to the table and updates the report totals
 func (t *MonthlyTimeReportTableWriter) Append(r *MonthlyTimeReport) {
 	billable := r.BillableStatus()
 	t.table.Append([]string{
@@ -138,6 +149,7 @@ func (t *MonthlyTimeReportTableWriter) Append(r *MonthlyTimeReport) {
 	t.totals[billable] = totals
 }
 
+// Render displays the time report data in a table format
 func (t *MonthlyTimeReportTableWriter) Render() {
 	var planned float64
 	var actual float64
@@ -167,6 +179,7 @@ func (t *MonthlyTimeReportTableWriter) Render() {
 	t.table.Render()
 }
 
+// RenderTable renders monthly time report data in a table format
 func (tr *MonthlyMemberTimeReport) RenderTable(writer io.Writer) {
 	reportGroups := make(map[string][]*MonthlyTimeReport)
 	projectReports := ProjectMemberTimeReports(tr.Reports)

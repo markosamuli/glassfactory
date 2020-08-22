@@ -58,6 +58,7 @@ func NewFiscalYear(d time.Time, finalMonth time.Month) *FiscalYear {
 	}
 }
 
+// FiscalYearMemberTimeReports convers MemberTimeReport data into FiscalYearMemberTimeReport
 func FiscalYearMemberTimeReports(reports []*model.MemberTimeReport, finalMonth time.Month) []*FiscalYearMemberTimeReport {
 	periods := make(map[FiscalYear]*FiscalYearMemberTimeReport, 0)
 	for _, r := range reports {
@@ -84,6 +85,7 @@ func (a ByFiscalYear) Len() int           { return len(a) }
 func (a ByFiscalYear) Less(i, j int) bool { return a[i].FiscalYear.Before(a[j].FiscalYear) }
 func (a ByFiscalYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
+// FiscalYearMemberTimeReport represents MemberTimeReport data for a given fiscal year
 type FiscalYearMemberTimeReport struct {
 	UserID     int
 	FiscalYear FiscalYear
@@ -92,6 +94,7 @@ type FiscalYearMemberTimeReport struct {
 	Reports    []*model.MemberTimeReport
 }
 
+// NewFiscalYearMemberTimeReport creates FiscalYearMemberTimeReport for a user and given fiscal year
 func NewFiscalYearMemberTimeReport(userID int, fy FiscalYear) *FiscalYearMemberTimeReport {
 	return &FiscalYearMemberTimeReport{
 		UserID:     userID,
@@ -100,6 +103,7 @@ func NewFiscalYearMemberTimeReport(userID int, fy FiscalYear) *FiscalYearMemberT
 	}
 }
 
+// RenderTable displays FiscalYearMemberTimeReport in using NewFiscalYearTimeReportTableWriter
 func (tr *FiscalYearMemberTimeReport) RenderTable(writer io.Writer) {
 	reportGroups := make(map[string][]*FiscalYearTimeReport)
 
@@ -142,6 +146,7 @@ func (tr *FiscalYearMemberTimeReport) RenderTable(writer io.Writer) {
 	table.Render()
 }
 
+// Append a MemberTimeReport to the FiscalYearMemberTimeReport
 func (tr *FiscalYearMemberTimeReport) Append(r *model.MemberTimeReport) {
 	if !tr.Start.IsValid() || r.Date.Before(tr.Start) {
 		tr.Start = r.Date
@@ -152,6 +157,7 @@ func (tr *FiscalYearMemberTimeReport) Append(r *model.MemberTimeReport) {
 	tr.Reports = append(tr.Reports, r)
 }
 
+// Planned returns total planned hours
 func (tr *FiscalYearMemberTimeReport) Planned() float64 {
 	var planned float64
 	for _, r := range tr.Reports {
@@ -160,6 +166,7 @@ func (tr *FiscalYearMemberTimeReport) Planned() float64 {
 	return planned
 }
 
+// Actual returns total actual hours
 func (tr *FiscalYearMemberTimeReport) Actual() float64 {
 	var actual float64
 	for _, r := range tr.Reports {
@@ -168,6 +175,7 @@ func (tr *FiscalYearMemberTimeReport) Actual() float64 {
 	return actual
 }
 
+// FiscalYearTimeReport represents fiscal year totals for a given client and project
 type FiscalYearTimeReport struct {
 	FiscalYear FiscalYear
 	Client     *model.Client
@@ -176,15 +184,18 @@ type FiscalYearTimeReport struct {
 	Actual     float64
 }
 
+// BillableStatus returns project's billable status
 func (r *FiscalYearTimeReport) BillableStatus() string {
 	return FormatBillableStatus(r.Project.BillableStatus)
 }
 
+// FiscalYearTimeReportTableWriter is used for displaying reports in table format
 type FiscalYearTimeReportTableWriter struct {
 	table  *tablewriter.Table
 	totals map[string]*TimeReportTotals
 }
 
+// NewFiscalYearTimeReportTableWriter creates a new FiscalYearTimeReportTableWriter
 func NewFiscalYearTimeReportTableWriter(writer io.Writer) *FiscalYearTimeReportTableWriter {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
@@ -204,6 +215,7 @@ func NewFiscalYearTimeReportTableWriter(writer io.Writer) *FiscalYearTimeReportT
 	}
 }
 
+// Append adds FiscalYearTimeReport data to the table and updates the total hours
 func (t *FiscalYearTimeReportTableWriter) Append(r *FiscalYearTimeReport) {
 	billable := r.BillableStatus()
 	t.table.Append([]string{
@@ -224,6 +236,7 @@ func (t *FiscalYearTimeReportTableWriter) Append(r *FiscalYearTimeReport) {
 	t.totals[billable] = totals
 }
 
+// Render displays the report data in a table format
 func (t *FiscalYearTimeReportTableWriter) Render() {
 	var planned float64
 	var actual float64
