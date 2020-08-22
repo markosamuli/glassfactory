@@ -3,9 +3,16 @@
 ![Test](https://github.com/markosamuli/glassfactory/workflows/Test/badge.svg)
 ![Lint](https://github.com/markosamuli/glassfactory/workflows/Lint/badge.svg)
 
-This is a CLI for [Glass Factory] resource management tool.
+This is a CLI for [Glass Factory][glassfactory] resource management tool that
+I've created for learning purposes.
 
-[Glass Factory]: https://glassfactory.io/
+This is not an official tool supported by the [Glass Factory][glassfactory]
+team and it might now work with your organisations's configuration.
+
+You might also need certain permissions to use these APIs. I don't provide any
+documentation or support for configuring your accounts.
+
+[glassfactory]: https://glassfactory.io/
 
 ## Usage
 
