@@ -1,4 +1,7 @@
-# Go library and CLI for Glass Factory
+# DEPRECATED Go library and CLI for Glass Factory
+
+This library is no longer maintained as I don't have access to Glass Factory
+anymore.
 
 ![Test](https://github.com/markosamuli/glassfactory/workflows/Test/badge.svg)
 ![Lint](https://github.com/markosamuli/glassfactory/workflows/Lint/badge.svg)
